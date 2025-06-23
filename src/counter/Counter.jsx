@@ -5,30 +5,43 @@ function Counter() {
 
   const [history, setHistory] = useState([0])
   const [count, setCount] = useState(0)
-
  
 
+ 
+const currentValue = history[count]
 
-
-const subtract = ()=>{
-  const newCount = count - 1
-  setCount(newCount)
-  setHistory([...history, newCount])
-
+const countValue = (newValue)=>{
+  const newHistory = history.splice(0, count + 1)
+  setHistory([...newHistory, newValue])
+  setCount(count + 1)
 }
 
 
-const addition = ()=>{
+const subtract = ()=>countValue(currentValue -1)
 
-  const newCount = count + 1
+const addition = ()=>countValue(currentValue + 1)
 
-  setCount(newCount)
 
-  setHistory([...history, newCount])
+
+const undo = ()=>{
+
+  if(count > 0){
+    setCount(count - 1)
+  }
+
+
+}
+  
+
+
+
+const redo = ()=>{
+
+  if(count < history.length - 1 ){
+    setCount(count + 1)
+  }
   
 }
-
-console.log(history);
 
 
 
@@ -37,7 +50,7 @@ console.log(history);
 
       <h2>The count value is:</h2>
 
-      <p className='text-8xl'>{count}</p>
+      <p className='text-8xl'>{currentValue}</p>
 
       <div className='flex gap-4 flex-row justify-center items-center'>
 
@@ -54,11 +67,11 @@ console.log(history);
 
       <div className='flex gap-4 flex-row justify-center items-center'>
 
-        <button>
+        <button onClick={undo} disabled={count === 0}>
           <FaUndo />
         </button>
 
-        <button>
+        <button onClick={redo}  disabled={count === history.length-1}>
           <FaRedo />
         </button>
 
